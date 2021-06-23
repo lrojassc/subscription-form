@@ -4,19 +4,22 @@ require_once plugin_dir_path(__FILE__).'../includes/vendor/autoload.php';
 
 class Subscription_Form_Chargebee {
 
+  /**
+   * Function that create subscription to API chargebee
+   * @param $billingAddress
+   * @param $customer
+   * @param $card
+   */
   public function create_subcription_chargebee($billingAddress, $customer, $card) {
 
-    //Obtener valores para acceder a la API
-    global $wpdb;
-    $connectionTable = $wpdb->prefix . 'connection_api';
-    $valueConection = $wpdb->get_row("SELECT site, api_key FROM $connectionTable WHERE id = 1 ");
+    $site = carbon_get_theme_option('site');
+    $apiKey = carbon_get_theme_option( 'api_key' );
 
     //enviar datos a API
-    ChargeBee_Environment::configure($valueConection->site, $valueConection->api_key);
+    ChargeBee_Environment::configure($site, $apiKey);
 
     $result = ChargeBee_Subscription::create(array(
       "planId" => "basic---annual",
-      "autoCollection" => "off",
       "billingAddress" => $billingAddress,
       "customer" => $customer,
       "card" => $card

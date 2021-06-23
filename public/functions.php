@@ -96,7 +96,6 @@ function get_form_values_and_send_to_api() {
     $month = sanitize_file_name($_POST['month']);
     $year = sanitize_file_name($_POST['year']);
     $cvv = sanitize_file_name($_POST['cvv']);
-    $idCustomer = sanitize_file_name($_POST['id']);
 
     //billing address
     $billingAddress = [
@@ -104,7 +103,7 @@ function get_form_values_and_send_to_api() {
         'lastName' => $lastName,
         'email' => $email,
         'phone' => $phone,
-        'country' => $country,
+        'country' => 'CO',
         'state' => $state,
         'city' => $city,
         'line1' => $address

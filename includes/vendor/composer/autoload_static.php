@@ -10,6 +10,20 @@ class ComposerStaticInit5723cb7f9b7832e91db5d90acac0a903
         '8dd32984d4cd58147cb41bf3844153c3' => __DIR__ . '/..' . '/chargebee/chargebee-php/lib/ChargeBee.php',
     );
 
+    public static $prefixLengthsPsr4 = array (
+        'C' => 
+        array (
+            'Carbon_Fields\\' => 14,
+        ),
+    );
+
+    public static $prefixDirsPsr4 = array (
+        'Carbon_Fields\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/htmlburger/carbon-fields/core',
+        ),
+    );
+
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -17,6 +31,8 @@ class ComposerStaticInit5723cb7f9b7832e91db5d90acac0a903
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5723cb7f9b7832e91db5d90acac0a903::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5723cb7f9b7832e91db5d90acac0a903::$prefixDirsPsr4;
             $loader->classMap = ComposerStaticInit5723cb7f9b7832e91db5d90acac0a903::$classMap;
 
         }, null, ClassLoader::class);
