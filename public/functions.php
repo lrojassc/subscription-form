@@ -15,6 +15,7 @@ function create_subscription_form() {
     ob_start();
     ?>
     <form action="<?php echo esc_url(admin_url('admin-post.php'))?>" method="post">
+      <?php wp_nonce_field('send_values', 'value_nonce'); ?>
       <div class="form-group">
         <label class="form-label" for="name">Nombre</label>
         <input class="form-control" type="text" id="name" name="name" required>
@@ -65,10 +66,6 @@ function create_subscription_form() {
         <label class="form-label" for="cvv">CVV</label>
         <input class="form-control" type="number" id="cvv" name="cvv" required>
       </div>
-      <div class="form-group">
-        <label class="form-label" for="id">Cedula</label>
-        <input class="form-control" type="number" id="id" name="id" required>
-      </div>
       <div class="form-input">
         <input type="submit" value="Enviar">
       </div>
@@ -84,49 +81,56 @@ function create_subscription_form() {
 
 function get_form_values_and_send_to_api() {
 
-    $name = sanitize_file_name($_POST['name']);
-    $lastName = sanitize_file_name($_POST['last_name']);
-    $email = sanitize_email($_POST['email']);
-    $phone = sanitize_file_name($_POST['mobile']);
-    $country = sanitize_file_name($_POST['country']);
-    $state = sanitize_file_name($_POST['state']);
-    $city = sanitize_file_name($_POST['city']);
-    $address = sanitize_file_name($_POST['address']);
-    $card = sanitize_file_name($_POST['card']);
-    $month = sanitize_file_name($_POST['month']);
-    $year = sanitize_file_name($_POST['year']);
-    $cvv = sanitize_file_name($_POST['cvv']);
+    if (!empty($_POST)) {
+      if (wp_verify_nonce($_POST['value_nonce'], 'send_values')) {
 
-    //billing address
-    $billingAddress = [
-        'firstName' => $name,
-        'lastName' => $lastName,
-        'email' => $email,
-        'phone' => $phone,
-        'country' => 'CO',
-        'state' => $state,
-        'city' => $city,
-        'line1' => $address
-    ];
+        $name = sanitize_text_field($_POST['name']);
+        $lastName = sanitize_text_field($_POST['last_name']);
+        $email = sanitize_email($_POST['email']);
+        $phone = sanitize_file_name($_POST['mobile']);
+        $state = sanitize_text_field($_POST['state']);
+        $city = sanitize_text_field($_POST['city']);
+        $address = sanitize_text_field($_POST['address']);
+        $card = sanitize_text_field($_POST['card']);
+        $month = sanitize_text_field($_POST['month']);
+        $year = sanitize_text_field($_POST['year']);
+        $cvv = sanitize_text_field($_POST['cvv']);
 
-    //data customer
-    $customer = [
-        'firstName' => $name,
-        'lastName' => $lastName,
-        'email' => $email,
-        'phone' => $phone
-    ];
+        if (!empty($name) && !empty($lastName) && !empty($email) && !empty($phone) && !empty($state) && !empty($city) &&
+        !empty($address) && !empty($card) && !empty($month) && !empty($year) && !empty($cvv)) {
 
-    //Data card
-    $card = [
-        "gatewayAccountId" => "gw_16CKjISS2yZ1E61V",
-        "number" => $card,
-        "expiryMonth" => $month,
-        "expiryYear" => $year,
-        "cvv" => $cvv
-    ];
+          //billing address
+          $billingAddress = [
+              'firstName' => $name,
+              'lastName' => $lastName,
+              'email' => $email,
+              'phone' => $phone,
+              'country' => 'CO',
+              'state' => $state,
+              'city' => $city,
+              'line1' => $address
+          ];
 
-  $api = new Subscription_Form_Chargebee();
-  $api->create_subcription_chargebee($billingAddress, $customer, $card);
+          //data customer
+          $customer = [
+              'firstName' => $name,
+              'lastName' => $lastName,
+              'email' => $email,
+              'phone' => $phone
+          ];
 
+          //Data card
+          $card = [
+              "gatewayAccountId" => "gw_16CKjISS2yZ1E61V",
+              "number" => $card,
+              "expiryMonth" => $month,
+              "expiryYear" => $year,
+              "cvv" => $cvv
+          ];
+
+          $api = new Subscription_Form_Chargebee();
+          $api->create_subcription_chargebee($billingAddress, $customer, $card);
+        }
+      }
+    }
 }
