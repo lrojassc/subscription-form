@@ -10,7 +10,7 @@ class Subscription_Form_Chargebee {
    * @param $customer
    * @param $card
    */
-  public function create_subcription_chargebee($billingAddress, $customer, $card) {
+  public function create_subscription_chargebee($billingAddress, $customer, $card) {
 
     $site = carbon_get_theme_option('site');
     $apiKey = carbon_get_theme_option( 'api_key' );
@@ -29,6 +29,8 @@ class Subscription_Form_Chargebee {
     $customer = $result->customer();
     $card = $result->card();
     $invoice = $result->invoice();
+
+    return true;
 
   }
 
