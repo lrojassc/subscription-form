@@ -11,24 +11,27 @@ class Subscription_Form_Chargebee {
    * @param $card
    */
   public function create_subscription_chargebee($billingAddress, $customer, $card) {
-    try {
-      $site = carbon_get_theme_option('site');
-      $apiKey = carbon_get_theme_option('api_key');
 
-      //enviar datos a API
-      ChargeBee_Environment::configure($site, $apiKey);
+    $site = carbon_get_theme_option('site');
+    $apiKey = carbon_get_theme_option( 'api_key' );
 
-      $result = ChargeBee_Subscription::create(array(
-        "planId" => "basic---annual",
-        "billingAddress" => $billingAddress,
-        "customer" => $customer,
-        "card" => $card
-      ));
+    //enviar datos a API
+    ChargeBee_Environment::configure($site, $apiKey);
 
-      return true;
-    } catch (Exception $e) {
-      return false;
-    }
+    $result = ChargeBee_Subscription::create(array(
+      "planId" => "basic---annual",
+      "billingAddress" => $billingAddress,
+      "customer" => $customer,
+      "card" => $card
+    ));
+
+    $subscription = $result->subscription();
+    $customer = $result->customer();
+    $card = $result->card();
+    $invoice = $result->invoice();
+
+    return true;
+
   }
 
 }

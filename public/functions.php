@@ -57,10 +57,8 @@ function create_subscription_form() {
 
     ob_start();
     ?>
-    <?php if (isset($subscription) && $subscription === true) { ?>
-        <p><strong style="color: #1a8819;">OK: Se ha realizado la suscripción con éxito.</strong></p>
-    <?php } elseif (isset($subscription) && $subscription !== true) { ?>
-        <p><strong style="color: #d41034;">ERROR: No se pudo realizar la suscripción.</strong></p>
+    <?php if (isset($subscription)) { ?>
+        <p><strong>Se ha realizado la suscripción.</strong></p>
     <?php } ?>
     <form action="<?php get_the_permalink(); ?>" method="post">
       <?php wp_nonce_field('send_values', 'value_nonce'); ?>
