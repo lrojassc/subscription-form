@@ -4,3 +4,5 @@ Plugin utilizado para realizar conexión a API Chargebee y envío de informació
 Descargar zip.
 
 Descomprimir y agregar archivos en carpeta de plugins.
+
+Vamos a realizar una prueba de revertir un commit
